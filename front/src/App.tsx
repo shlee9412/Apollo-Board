@@ -9,7 +9,7 @@ import Write from './pages/Write';
 import Modify from './pages/Modify';
 import SelectedPost from './pages/SelctedPost';
 
-const link = new HttpLink({ uri: 'http://localhost:4000/gql' });
+const link = new HttpLink({ uri: 'http://localhost:4600/gql' });
 const client = new ApolloClient({ link, cache: new InMemoryCache() });
 
 function App() {
