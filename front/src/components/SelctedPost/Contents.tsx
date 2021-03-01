@@ -1,7 +1,6 @@
 import { useLazyQuery } from "@apollo/react-hooks";
 import { useEffect } from "react";
 import { Form } from "react-bootstrap";
-import { Redirect } from "react-router";
 import { ONE_POST } from "../../gql";
 import { convertDateString } from "../../utils";
 
@@ -14,7 +13,7 @@ const Contents = ({ postIdx }: PropsType) => {
 
   useEffect(() => {
     sendPostIdx({ variables: { postIdx: +postIdx } });
-  }, [postIdx]);
+  }, [postIdx, sendPostIdx]);
 
   if (loading) return <></>;
   if (!data) return <></>;

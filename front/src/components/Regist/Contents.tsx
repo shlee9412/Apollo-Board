@@ -1,13 +1,11 @@
 import { useMutation } from '@apollo/react-hooks';
-import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { KeyboardEvent, useCallback, useEffect, useRef } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { Redirect } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router';
 import Swal from 'sweetalert2';
 import { REGIST } from '../../gql';
 
-const Contents = () => {
-  const [moveLogin, setMoveLogin] = useState<boolean>(false);
-
+const Contents = ({ history }: RouteComponentProps) => {
   const _user_id = useRef<HTMLInputElement>(null);
   const _password = useRef<HTMLInputElement>(null);
   const _confirm_password = useRef<HTMLInputElement>(null);
@@ -119,68 +117,64 @@ const Contents = () => {
         didOpen: () => document.body.removeAttribute('class'),
         didClose: () => {
           if (data?.regist.result) {
-            setMoveLogin(true);
+            history.push('/login');
           }
         }
       });
     }
-  }, [data]);
+  }, [data, history]);
 
   return (
-    <>
-      {moveLogin && <Redirect to='/login'/>}
+    <div className='login-container'>
+      <div className='login-wrapper'>
+        <h2>회원가입</h2>
 
-      <div className='login-container'>
-        <div className='login-wrapper'>
-          <h2>회원가입</h2>
+        <Form.Group>
+          <Form.Label>ID</Form.Label>
+          <Form.Control
+            ref={_user_id}
+            onKeyUp={pressEnter}
+          />
 
-          <Form.Group>
-            <Form.Label>ID</Form.Label>
-            <Form.Control
-              ref={_user_id}
-              onKeyUp={pressEnter}
-            />
+          <Form.Label style={{ marginTop: '10px' }}>PASSWORD</Form.Label>
+          <Form.Control
+            ref={_password}
+            type='password'
+            onKeyUp={pressEnter}
+          />
 
-            <Form.Label style={{ marginTop: '10px' }}>PASSWORD</Form.Label>
-            <Form.Control
-              ref={_password}
-              type='password'
-              onKeyUp={pressEnter}
-            />
+          <Form.Label style={{ marginTop: '10px' }}>CONFIRM PASSWORD</Form.Label>
+          <Form.Control
+            ref={_confirm_password}
+            type='password'
+            onKeyUp={pressEnter}
+          />
 
-            <Form.Label style={{ marginTop: '10px' }}>CONFIRM PASSWORD</Form.Label>
-            <Form.Control
-              ref={_confirm_password}
-              type='password'
-              onKeyUp={pressEnter}
-            />
+          <Form.Label style={{ marginTop: '10px' }}>NAME</Form.Label>
+          <Form.Control
+            ref={_name}
+            onKeyUp={pressEnter}
+          />
 
-            <Form.Label style={{ marginTop: '10px' }}>NAME</Form.Label>
-            <Form.Control
-              ref={_name}
-              onKeyUp={pressEnter}
-            />
+          <Form.Label style={{ marginTop: '10px' }}>NICKNAME</Form.Label>
+          <Form.Control
+            ref={_nickname}
+            onKeyUp={pressEnter}
+          />
 
-            <Form.Label style={{ marginTop: '10px' }}>NICKNAME</Form.Label>
-            <Form.Control
-              ref={_nickname}
-              onKeyUp={pressEnter}
-            />
-
-            <Button
-              style={{
-                width: '100%',
-                margin: '20px 0 0 0'
-              }}
-              onClick={regist}
-            >
-              REGIST
-            </Button>
-          </Form.Group>
-        </div>
+          <Button
+            style={{
+              width: '100%',
+              margin: '20px 0 0 0'
+            }}
+            onClick={regist}
+          >
+            REGIST
+          </Button>
+        </Form.Group>
       </div>
-    </>
+    </div>
   );
 };
 
-export default Contents;
+export default withRouter(Contents);

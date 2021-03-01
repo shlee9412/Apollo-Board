@@ -2,11 +2,10 @@ import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import Swal from 'sweetalert2';
 import { LEAVE, MODIFY } from '../../gql';
-import { Redirect } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { Button, Form, Modal } from 'react-bootstrap';
 
-const Contents = () => {
-  const [moveMain, setMoveMain] = useState<boolean>(false);
+const Contents = ({ history }: RouteComponentProps) => {
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const _user_id = useRef<HTMLInputElement>(null);
@@ -148,12 +147,12 @@ const Contents = () => {
         },
         didClose: () => {
           if (registResult?.modify.result) {
-            setMoveMain(true);
+            history.push('/');
           }
         }
       });
     }
-  }, [registResult]);
+  }, [registResult, history]);
 
   useEffect(() => {
     if (leaveResult !== undefined) {
@@ -167,15 +166,15 @@ const Contents = () => {
           }
           document.body.removeAttribute('class')
         },
-        didClose: () => setMoveMain(true)
+        didClose: () => history.push('/')
       });
     }
-  }, [leaveResult]);
+  }, [leaveResult, history]);
 
   useEffect(() => {
     const tmp = sessionStorage.getItem('userInfo');
     if (!tmp) {
-      setMoveMain(true);
+      history.push('/');
       return;
     }
 
@@ -190,12 +189,10 @@ const Contents = () => {
     _user_id.current.value = userInfo.userId;
     _name.current.value = userInfo.name;
     _nickname.current.value = userInfo.nickname;
-  }, []);
+  }, [history]);
 
   return (
     <>
-      {moveMain && <Redirect to='/'/>}
-
       <div className='login-container'>
         <div className='login-wrapper'>
           <h2>회원정보 수정</h2>
@@ -288,4 +285,4 @@ const Contents = () => {
   );
 };
 
-export default Contents;
+export default withRouter(Contents);

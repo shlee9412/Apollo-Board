@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/react-hooks';
 import { MDBDataTable } from 'mdbreact';
-import { useState } from 'react';
-import { Redirect } from 'react-router';
+import { Redirect, RouteComponentProps, withRouter } from 'react-router';
 import { POSTS } from '../../gql';
 import { convertDateString } from '../../utils';
 
@@ -28,9 +27,7 @@ const columns = [
   },
 ]
 
-const Table = () => {
-  const [postIdx, setPostIdx] = useState<number | null>(null);
-
+const Table = ({ history }: RouteComponentProps) => {
   const { loading, error, data: postsData } = useQuery(POSTS, {
     variables: {
       postIdx: null
@@ -41,30 +38,26 @@ const Table = () => {
   if (error) return <Redirect to='/'/>;
 
   return (
-    <>
-      {postIdx !== null && <Redirect to={`/post/${postIdx}`}/>}
-
-      <MDBDataTable
-        striped
-        bordered
-        scrollX
-        small
-        noBottomColumns
-        hover
-        data={{
-          columns,
-          rows: postsData.posts.map((d: Post, i: number) => {
-            return {
-              ...d,
-              postIdx: i + 1,
-              regdate: convertDateString(d.regdate),
-              clickEvent: () => setPostIdx(d.postIdx)
-            }
-          })
-        }}
-      />
-    </>
+    <MDBDataTable
+      striped
+      bordered
+      scrollX
+      small
+      noBottomColumns
+      hover
+      data={{
+        columns,
+        rows: postsData.posts.map((d: Post, i: number) => {
+          return {
+            ...d,
+            postIdx: i + 1,
+            regdate: convertDateString(d.regdate),
+            clickEvent: () => history.push(`/post/${d.postIdx}`)
+          }
+        })
+      }}
+    />
   );
 };
 
-export default Table;
+export default withRouter(Table);

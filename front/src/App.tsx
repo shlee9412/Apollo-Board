@@ -21,7 +21,7 @@ function App() {
         <Route exact path='/' component={Main}/>
         <Route exact path='/write' component={Write}/>
         <Route exact path='/modify' component={Modify}/>
-        <Route exact path='/post/:postIdx' render={props => <SelectedPost {...props}/>}/>
+        <Route exact path='/post/:postIdx' component={SelectedPost}/>
       </BrowserRouter>
     </ApolloProvider>
   );
