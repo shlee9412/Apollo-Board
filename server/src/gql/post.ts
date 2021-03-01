@@ -29,7 +29,7 @@ export const postResolvers = {
             B.regdate
           FROM
             USERINFO A
-          LEFT OUTER JOIN
+          INNER JOIN
             POSTS B
           ON
             A.idx = B.userIdx
